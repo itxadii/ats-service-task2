@@ -1,0 +1,37 @@
+service: ats-service
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ap-south-1 # Your region
+  environment:
+    # We load these from a .env file locally
+    RECRUITEE_COMPANY_ID: ${env:RECRUITEE_COMPANY_ID}
+    RECRUITEE_API_TOKEN: ${env:RECRUITEE_API_TOKEN}
+
+plugins:
+  - serverless-python-requirements
+  - serverless-offline # Allows running "sls offline" to test locally
+
+functions:
+  getJobs:
+    handler: handler.get_jobs
+    events:
+      - http:
+          path: jobs
+          method: get
+
+  createCandidate:
+    handler: handler.create_candidate
+    events:
+      - http:
+          path: candidates
+          method: post
+
+  getApplications:
+    handler: handler.get_applications
+    events:
+      - http:
+          path: applications
+          method: get
